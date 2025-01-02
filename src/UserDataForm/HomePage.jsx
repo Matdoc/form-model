@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './formmodel.css';
 import FormPage from './FormPage';
 
 const HomePage = () => {
     const [showForm, setShowForm] = useState(false);
+    const modalRef = useRef(null);
 
     const handleOpenForm = () => {
         setShowForm(true);
@@ -12,6 +13,24 @@ const HomePage = () => {
     const handleCloseForm = () => {
         setShowForm(false);
     };
+
+    const handleClickOutside = (event) => {
+        if (modalRef.current && !modalRef.current.contains(event.target)) {
+            handleCloseForm();
+        }
+    };
+
+    useEffect(() => {
+        if (showForm) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showForm]);
 
     const [data, setData] = useState({
         username: '',
@@ -80,7 +99,7 @@ const HomePage = () => {
 
             {showForm && (
                 <div className='modal'>
-                    <div className='modal-content'>
+                    <div className='modal-content' ref={modalRef}>
                         <span className='close' onClick={handleCloseForm}>&times;</span>
                         <h1>Fill details</h1>
                         <form className='form' onSubmit={handleSubmit} noValidate>
