@@ -1,5 +1,4 @@
 //modal overlay that covers the entire screen and makes the background content inactive.
-
 import React, { useState } from 'react';
 import './HomePage.css';
 import FormPage from './FormPage';
